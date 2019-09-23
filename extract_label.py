@@ -26,6 +26,6 @@ for key in label:
 #     # classification_name = "data_retention"
 #     classification_name = "15_classification"
 #     preproces.CalDataLabel(orgin_path, "../config/"+classification_name+".json").extract_data("./data/" + classification_name, bi_label=classification_name)
-
-classification_name = "10_classification"
-preproces.CalDataLabel(orgin_path, "./config/"+classification_name+".json").extract_all_label()
+for i in range(0,10):
+    classification_name = str(i)
+    preproces.CalDataLabel(orgin_path, "./config/"+classification_name+".json").extract_data("./un_downsampling/" + classification_name, down_sampling=False)

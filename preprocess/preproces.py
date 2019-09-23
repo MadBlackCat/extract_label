@@ -182,7 +182,7 @@ class CalDataLabel():
             with open("./config/"+str(i)+".json", "w", encoding="utf-8") as fin:
                 fin.write(json.dumps(bi_label_dict))
 
-    def extract_data(self, out_path, all_data=None, classification_name="Other"):
+    def extract_data(self, out_path, all_data=None, down_sampling=True):
         if all_data is None:
             data = self.data[self.data.label != "Other"]
         else:
@@ -216,10 +216,13 @@ class CalDataLabel():
         dev_data = pd.DataFrame(dev_data, columns=["sentiment","review"])
         test_data = pd.DataFrame(test_data, columns=["sentiment","review"])
 
-        is_label = train_data[train_data.sentiment == 1]
-        no_label = train_data[train_data.sentiment != 1].sample(n=len(is_label))
+        if down_sampling:
+            is_label = train_data[train_data.sentiment == 1]
+            no_label = train_data[train_data.sentiment != 1].sample(n=len(is_label))
 
-        fin_train_data = pd.concat([is_label, no_label]).sample(frac=1, random_state=666)
+            fin_train_data = pd.concat([is_label, no_label]).sample(frac=1, random_state=666)
+        else:
+            fin_train_data = train_data
         print("Train Data Num - " + str(len(fin_train_data)), " ||| Dev Data Num - " + str(len(dev_data)), " ||| Test Data - " + str(len(test_data)))
         fin_train_data.to_csv(out_path+"_train_data.tsv", sep="\t")
         dev_data.to_csv(out_path+"_dev_data.tsv", sep="\t")
